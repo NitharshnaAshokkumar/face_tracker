@@ -12,7 +12,7 @@ A robust, hackathon-ready Face Tracking, Identification, and Visitor Counting pi
 
 ## Video Demonstration
 
-**[ADD YOUR VIDEO LINK HERE]**
+  https://drive.google.com/file/d/1ZV3TQM0kmPsCQbKJzA1wTzpxlzBukVvN/view
 
 ## Setup Instructions
 

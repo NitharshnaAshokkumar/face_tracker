@@ -75,4 +75,31 @@ graph TD
 ---
 
 ## 💡 Pro Tip:
-If you use the **Mermaid** version, click "Actions" -> "Download SVG" in the editor to get a crystal-clear image you can put directly in your README or presentation!
+---
+
+## ⚡ Option 4: Eraser.io (Diagram-as-Code)
+**Best for**: Highly polished, professional whiteboard-style diagrams.
+**How to use**: 
+1. Go to [Eraser.io](https://app.eraser.io/).
+2. Click **Create New** -> **Diagram**.
+3. Switch to the **Diagram-as-Code** (Code Editor) tab on the right side.
+4. Paste the following code:
+
+```edl
+// Define Nodes
+Video_Stream [icon: video, shape: cloud]
+Face_Pipeline [icon: box, shape: package, label: "Face Counter Pipeline"] {
+  YOLO_Detector [icon: search]
+  InsightFace_Embedder [icon: cpu]
+  KCF_Tracker [icon: activity]
+}
+SQLite_DB [icon: database, shape: database]
+Web_Dashboard [icon: layout, shape: laptop]
+
+// Define Connections
+Video_Stream > Face_Pipeline
+Face_Pipeline.YOLO_Detector > Face_Pipeline.InsightFace_Embedder
+Face_Pipeline.InsightFace_Embedder > SQLite_DB
+Face_Pipeline.KCF_Tracker > SQLite_DB
+SQLite_DB > Web_Dashboard
+```

@@ -88,53 +88,48 @@ To run with a live IP camera stream, simply modify your `config.json`:
 }
 ```
 
-## Folder Structure
+## 📂 Folder Structure
 
 ```
 face-visitor-counter/
-├── app.py                      # Main entrypoint
+├── app.py                      # Main entrypoint (CLI)
+├── streamlit_app.py            # Main entrypoint (Web Dashboard)
 ├── config.json                 # Configuration parameters
 ├── requirements.txt            # Python dependencies
 ├── src/                        # Main logic modules
-│   ├── config_loader.py
 │   ├── pipeline.py             # Orchestrates the logic
 │   ├── detector.py             # YOLO Face Wrapper
 │   ├── recognizer.py           # InsightFace Wrapper
 │   ├── registry.py             # Matches Tracks against DB
 │   ├── tracker.py              # IoU & BBox Tracker
-│   ├── event_logger.py         # Logs ENTRY/EXIT metrics
-│   ├── video_source.py         # Handles MP4 / RTSP
+│   ├── ui_helpers.py           # Dashboard Data Helpers
 │   ├── database.py             # SQLite interface
-│   ├── face_store.py           # Loads/Saves embeddings locally
-│   └── utils.py                # Logging & Math helper
-├── data/
-│   ├── db/                     # SQLite files
-│   ├── input/                  # Sample inputs
-│   └── output/embeddings       # Stored `.npy` face matrices
+│   └── ...
 ├── scripts/                    # Helper scripts
-│   ├── init_db.py
-│   ├── run_demo.py
-│   └── export_summary.py
-├── docs/                       # Architecture & design info
+│   ├── init_db.py              # DB Initialization
+│   ├── download_models.py      # Dependency setup
+│   ├── run_ui.py               # Dashboard Launcher
+│   └── export_summary.py       # CLI Summary
+├── docs/                       # Planning & Architecture
 └── tests/                      # Pytest cases
 ```
 
-## Documentation References
-For deep dives into our engineering process, please refer to:
-- **[Planning Details](docs/PLANNING.md)**: Our step-by-step phased approach and mitigations.
-- **[Architecture Details](docs/ARCHITECTURE.md)**: Contains the full modular tracking diagram.
-- **[Compute Estimates](docs/COMPUTE_ESTIMATE.md)**: Detailed statistics on CPU/GPU expected workloads.
+## 📝 AI Planning & Architecture
+This project followed a rigorous design phase:
+- **[AI Planning Document](docs/PLANNING.md)**: Detailed breakdown of the phased implementation strategy.
+- **[Architecture Diagram](docs/ARCHITECTURE.md)**: Visual representation of the data flow from video source to identified events.
+- **[Compute Estimates](docs/COMPUTE_ESTIMATE.md)**: Performance analysis for CPU/GPU targets.
 
-## Assumptions
+## 💡 Assumptions
 - A sufficiently illuminated, mostly forward-facing capture geometry exists.
 - Running without a GPU leverages the OpenCV KCF tracker tightly bounding YOLO detection limits for smooth 10fps+ behavior on CPU.
 - Config correctly aligns with absolute/relative OS-agnostic `pathlib` resolutions.
 
-## Configuration Basics (`config.json`)
-The application is highly dynamically configured at runtime. A typical `config.json` parameter set:
+## ⚙️ Sample `config.json` Structure
 ```json
 {
   "video_source": "data/input/sample.mp4",
+  "source_type": "video",
   "db_path": "data/db/visitor_counter.db",
   "log_root": "logs",
   "output_root": "data/output",
@@ -142,21 +137,22 @@ The application is highly dynamically configured at runtime. A typical `config.j
     "model_path": "models/yolov8n-face.pt",
     "conf_threshold": 0.45,
     "frame_skip": 3
+  },
+  "recognizer": {
+    "model_name": "buffalo_l",
+    "recognition_threshold": 0.45
   }
 }
 ```
 
-## Interview & Discussion Points
+## 🎤 Interview & Discussion Points
+*   **Why SQLite?**: Simple zero-setup persistence for a hackathon. Easily upgradable to Postgres.
+*   **How does Entry/Exit work?**: Avoids duplicate counts by requiring a stabilization period (`min_track_hits`) and a timeout period (`max_missing_frames`).
+*   **Unique Visitor Logic**: Every face is mapped to a high-dimensional embedding. We use Cosine Similarity to compare new detections against all registered identities in the DB.
 
-*   **Why SQLite?**: Simple zero-setup persistence for a hackathon. Easily upgradable to Postgres by swapping out `database.py` logic.
-*   **Why not pure ByteTrack?**: Compiling custom C++ lapjv/ByteTrack dependencies cross-platform often burns time during hackathons and demos. A robust multi-tracker mixing deterministic IoU with KCF provides almost identical stability without the deployment nightmare.
-*   **How does Entry/Exit work?**: An object is only logged as an `ENTRY` when it stabilizes (`min_track_hits`). It's only logged as an `EXIT` when it has gone missing for `max_missing_frames`. The overall visitor count is strictly tied to `IdentityID` persistence, so re-entries don't corrupt the dashboard metrics.
-
-## Troubleshooting
-
-- `FileNotFoundError: Config file not found`: Ensure you are running scripts from the root directory of the repository.
-- `CV2 assertion error`: Your video file or camera path is incorrectly configured in `config.json`.
-- `InsightFace fails to execute on CPU`: Ensure `CPUExecutionProvider` is correctly listed in `config.json` rather than CUDA, if you lack a GPU.
+## 🛠️ Troubleshooting
+- `FileNotFoundError`: Ensure you are running scripts from the root directory.
+- `CV2 assertion error`: Check your video path in `config.json`.
 
 ---
 

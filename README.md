@@ -61,6 +61,22 @@ python app.py --config config.json
 python scripts/export_summary.py
 ```
 
+### 4. Web Dashboard (Recommended)
+
+To view visitor analytics, the identity gallery, and real-time event logs in a beautiful modern interface, launch the Streamlit dashboard:
+
+```bash
+python scripts/run_ui.py
+```
+
+**Features:**
+- **Dashboard**: Real-time summary cards and monitoring status.
+- **Visitor Gallery**: Searchable cards for every unique person detected, with photos.
+- **Event Logs**: Detailed ENTRY/EXIT history with CSV export functionality.
+- **Analytics**: Trend charts for visitor flow and activity.
+- **Config**: Edit system thresholds and video sources directly from the UI.
+
+
 ### 4. Running with RTSP
 
 To run with a live IP camera stream, simply modify your `config.json`:

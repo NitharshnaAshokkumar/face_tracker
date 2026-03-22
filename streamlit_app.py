@@ -112,7 +112,7 @@ elif page == "👥 Visitor Gallery":
                     st.subheader(f"ID: {row['identity_id']}")
                     st.write(f"**First Seen**: {row['first_seen']}")
                     st.write(f"**Last Seen**: {row['last_seen']}")
-                    st.write(f"**Source**: {row['source']}")
+                    st.write(f"**Source**: {row['source_name']}")
                 
                 with c3:
                     st.metric("Events", row['event_count'])

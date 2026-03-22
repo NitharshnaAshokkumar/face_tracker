@@ -40,7 +40,7 @@ class UIHelper:
 
     def get_recent_events(self, limit: int = 20):
         query = """
-        SELECT e.id, e.timestamp, e.event_type, e.identity_id, e.track_id, e.source
+        SELECT e.id, e.timestamp, e.event_type, e.identity_id, e.track_id, e.source_name
         FROM events e
         ORDER BY e.timestamp DESC
         LIMIT ?
@@ -51,7 +51,7 @@ class UIHelper:
 
     def get_visitor_gallery(self):
         query = """
-        SELECT i.identity_id, i.first_seen, i.last_seen, i.source,
+        SELECT i.identity_id, i.first_seen, i.last_seen, i.source_name,
                (SELECT COUNT(*) FROM events WHERE identity_id = i.identity_id) as event_count
         FROM identities i
         ORDER BY i.last_seen DESC

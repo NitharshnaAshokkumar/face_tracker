@@ -1,0 +1,31 @@
+{
+  "video_source": "data/input/video1.mp4",
+  "source_type": "video",
+  "rtsp_url": "",
+  "db_path": "data/db/visitor_counter.db",
+  "log_root": "logs",
+  "output_root": "data/output",
+  "detector": {
+    "model_path": "models/yolov8n-face.pt",
+    "conf_threshold": 0.45,
+    "frame_skip": 3,
+    "input_size": 640
+  },
+  "recognizer": {
+    "model_name": "buffalo_l",
+    "providers": [
+      "CPUExecutionProvider"
+    ],
+    "recognition_threshold": 0.45,
+    "min_face_size": 50
+  },
+  "tracker": {
+    "max_missing_frames": 20,
+    "min_track_hits": 3,
+    "iou_threshold": 0.3
+  },
+  "logging": {
+    "save_entry_images": true,
+    "save_exit_images": true
+  }
+}
